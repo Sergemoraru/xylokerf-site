@@ -1123,6 +1123,16 @@ h1 .second{color:var(--forest-text)}
     }, { threshold: [.6] });
     io.observe(strip);
   }
+
+  // Ads link here with ?ct=<campaign>; carry it into the App Store links so App Store Connect credits that campaign.
+  const ct = (new URLSearchParams(location.search).get('ct') || '').replace(/[^\w-]/g, '').slice(0, 40);
+  if (ct) {
+    document.querySelectorAll('a[href^="https://apps.apple.com/"]').forEach(a => {
+      const u = new URL(a.href);
+      u.searchParams.set('ct', ct);
+      a.href = u.toString();
+    });
+  }
 })();
 </script>
 </body>

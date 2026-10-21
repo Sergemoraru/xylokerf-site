@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-itunes-app" content="app-id=6766369684">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171B1D" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://xylokerf.com/">
+<meta property="og:title" content="XyloKerf: Cut List Optimizer">
+<meta property="og:description" content="Measurements in. Cutting plan out. Kerf-aware layouts for plywood, MDF and boards on iPhone and iPad.">
+<meta property="og:image" content="https://xylokerf.com/img/icon.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<link rel="canonical" href="https://xylokerf.com/">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>XyloKerf</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="XyloKerf turns your measurements into a kerf-aware cutting plan for plywood, MDF and boards, then walks you through every cut in order. For iPhone and iPad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Nunito:wght@700;800;900&display=swap">
+<style>
+/* Layout: a shop drawing. Sand paper ground, a to-scale 48" x 96" sheet as the hero,
+   dimension lines, a title block and real measurements as the page's structure.
+   Palette and rounded display type follow the app's own BrandColor and BrandFont. */
+:root{
+  --paper:#F4F1EA; --paper-deep:#EAE3D5; --surface:#FFFFFF;
+  --ink:#1F2326; --muted:#5C605D; --rule:#D8CFBE;
+  --forest:#3E5A4A; --forest-hover:#324B3D; --forest-text:#3E5A4A; --on-forest:#F7F4EC;
+  --walnut:#8B5E34; --accent-text:#8B5E34; --oak:#D7B98A;
+  --offcut:#E6DAC2; --grain:#CDB78F; --blade:#F0A43A; --cut-halo:#1F2326;
+  --bezel:#1F2326; --bezel-edge:rgba(31,35,38,0);
+  --steel:#A3ABAE; --steel-deep:#677074; --dust:#9B7A4D; --blade-soft:#F6DDB5; --piece-shadow:#D6CCB8;
+  --band:#3E5A4A; --band-ink:#F7F4EC; --band-muted:#CBD6CE; --band-accent:#E2C799;
+  --shadow:0 30px 60px -30px rgba(31,35,38,.45);
+  --display:ui-rounded,"SF Pro Rounded","Nunito",system-ui,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","IBM Plex Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#171B1D; --paper-deep:#20262A; --surface:#1F2427;
+    --ink:#ECE7DC; --muted:#A3A8A2; --rule:#343B3E;
+    --forest:#4A6E5A; --forest-hover:#557B66; --forest-text:#A9C7B2; --on-forest:#F7F4EC;
+    --walnut:#94643A; --accent-text:#DDBF8F; --oak:#D7B98A;
+    --offcut:#38332A; --grain:#4C4436; --blade:#F6B552; --cut-halo:#0B0D0E;
+    --bezel:#0B0D0E; --bezel-edge:#3A4246;
+  --steel:#8F999D; --steel-deep:#596367; --dust:#E2CB9E; --blade-soft:#5A4626; --piece-shadow:#0C0F10;
+    --band:#1F2E26; --band-ink:#F2EEE5; --band-muted:#AEBDB3; --band-accent:#DDBF8F;
+    --shadow:0 30px 60px -30px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#171B1D; --paper-deep:#20262A; --surface:#1F2427;
+  --ink:#ECE7DC; --muted:#A3A8A2; --rule:#343B3E;
+  --forest:#4A6E5A; --forest-hover:#557B66; --forest-text:#A9C7B2; --on-forest:#F7F4EC;
+  --walnut:#94643A; --accent-text:#DDBF8F; --oak:#D7B98A;
+  --offcut:#38332A; --grain:#4C4436; --blade:#F6B552; --cut-halo:#0B0D0E;
+  --bezel:#0B0D0E; --bezel-edge:#3A4246;
+  --steel:#8F999D; --steel-deep:#596367; --dust:#E2CB9E; --blade-soft:#5A4626; --piece-shadow:#0C0F10;
+  --band:#1F2E26; --band-ink:#F2EEE5; --band-muted:#AEBDB3; --band-accent:#DDBF8F;
+  --shadow:0 30px 60px -30px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blade);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+p{margin:0}
+
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(24px, env(safe-area-inset-left, 0px));padding-right:max(24px, env(safe-area-inset-right, 0px))}
+.eyebrow{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text)}
+.section{padding-block:clamp(64px, 9vw, 120px)}
+.section-head{display:grid;gap:14px;max-width:760px;margin-bottom:clamp(36px, 5vw, 56px)}
+h2{font-size:clamp(2rem, 1.3rem + 2.6vw, 3.4rem);font-weight:900;line-height:1.02;letter-spacing:-.015em}
+h3{font-size:1.3rem;font-weight:800;line-height:1.2}
+
+/* App Store buttons */
+.store{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:8px 28px 8px 20px;border-radius:999px;background:var(--forest);color:var(--on-forest);text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.2rem;line-height:1.1;transition:background-color .2s}
+.store:hover{background:var(--forest-hover)}
+.store svg{width:24px;height:24px;flex:none}
+.store small{display:block;font-family:var(--body);font-weight:500;font-size:.72rem;letter-spacing:.01em;opacity:.85}
+.btn-sm{display:inline-flex;align-items:center;min-height:40px;padding:0 18px;border-radius:999px;background:var(--forest);color:var(--on-forest);text-decoration:none;font-family:var(--display);font-weight:800;font-size:.95rem;white-space:nowrap}
+.btn-sm:hover{background:var(--forest-hover)}
+
+/* Header */
+.head-row{display:flex;align-items:center;gap:24px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+.brand img{width:38px;height:38px;border-radius:22.5%}
+.wordmark{font-family:var(--display);font-weight:900;font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase}
+.head-nav{display:flex;gap:26px;font-size:.95rem;color:var(--muted)}
+.head-nav a{text-decoration:none}
+.head-nav a:hover{color:var(--ink)}
+
+/* Hero */
+.hero .wrap{padding-block:clamp(20px, 4vw, 48px) clamp(56px, 8vw, 104px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"head head" "copy plan" "block plan";column-gap:56px;row-gap:32px}
+.hero-head{grid-area:head;display:grid;gap:18px}
+h1{font-size:clamp(2.1rem, 8.6vw, 5.6rem);font-weight:900;line-height:.98;letter-spacing:-.02em}
+h1 .second{color:var(--forest-text)}
+.hero-copy{grid-area:copy;display:grid;gap:24px;align-content:start;max-width:34em}
+.lede{font-size:clamp(1.08rem, 1rem + .4vw, 1.3rem);line-height:1.5;color:var(--muted)}
+.fine{font-size:.92rem;color:var(--muted)}
+.fine strong{color:var(--ink);font-weight:650}
+
+.title-block{grid-area:block;align-self:end;display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink);max-width:34em;font-size:.95rem}
+.title-block > div{padding:10px 14px;border-bottom:1px solid var(--rule);display:grid;gap:2px;min-width:0}
+.title-block > div:nth-child(odd){border-right:1px solid var(--rule)}
+.title-block .tb-wide{grid-column:1 / -1;border-right:0 !important;border-bottom:0}
+.tb-label{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tb-value{font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.88rem}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.sw-part{background:var(--forest)} .sw-rot{background:var(--walnut)} .sw-off{background:var(--offcut);box-shadow:inset 0 0 0 1px var(--grain)}
+
+.plan{grid-area:plan;display:grid;grid-template-columns:262px 286px;gap:26px;align-items:end;margin:0}
+.hero{overflow-x:clip}
+.sheet-wrap{position:relative;min-width:0}
+.dust{position:absolute;left:-16px;top:-16px;pointer-events:none}
+#sheet{display:block;width:100%;height:auto;overflow:visible}
+#sheet .grain-line{fill:none;stroke:var(--grain);stroke-width:.22}
+#sheet .o-rect{fill:var(--offcut)}
+#sheet .shadow{fill:var(--piece-shadow)}
+#sheet .k-strip{fill:var(--offcut)}
+#sheet .p-rect{fill:var(--forest)}
+#sheet .rot .p-rect{fill:var(--walnut)}
+#sheet .p-name{fill:var(--on-forest);font-family:var(--body);font-weight:700;font-size:2.15px}
+#sheet .p-dims{fill:var(--on-forest);font-family:var(--mono);font-weight:500;font-size:1.7px;opacity:.92}
+#sheet .p-small .p-name{font-size:1.45px}
+#sheet .p-small .p-dims{font-size:1.3px}
+#sheet .badge circle{fill:var(--on-forest)}
+#sheet .badge path{fill:none;stroke:var(--forest);stroke-width:.32;stroke-linecap:round;stroke-linejoin:round}
+#sheet .rot .badge path{stroke:var(--walnut)}
+#sheet .mark{stroke:var(--blade);stroke-width:.32;stroke-dasharray:.9 .6;stroke-linecap:round}
+#sheet.static .mark{stroke-dasharray:none;stroke-width:.55}
+#sheet .groove{stroke:var(--cut-halo);stroke-width:.4}
+#sheet .bl-ring{fill:none;stroke:var(--steel-deep);stroke-width:.2}
+#sheet .bl-teeth{fill:var(--steel-deep)}
+#sheet .bl-disc{fill:var(--steel)}
+#sheet .bl-slot{stroke:var(--steel-deep);stroke-width:.2;stroke-linecap:round}
+#sheet .bl-hub{fill:var(--steel-deep)}
+#sheet .bl-arbor{fill:var(--paper)}
+#sheet .dim line{stroke:var(--muted);stroke-width:.2}
+#sheet .dim rect{fill:var(--paper)}
+#sheet .dim text{fill:var(--muted);font-family:var(--mono);font-weight:600;font-size:2.4px}
+#sheet .sheet-size{fill:var(--muted);font-family:var(--mono);font-weight:600;font-size:1.75px}
+
+.readout{background:var(--paper-deep);border-radius:18px;padding:18px;display:grid;gap:12px}
+.ro-top{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+.ro-top .ro-type{color:var(--accent-text)}
+.ro-text{font-weight:700;font-size:1rem;line-height:1.4;min-height:calc(1.4em * 5)}
+.ro-meta{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.ro-progress{display:flex;gap:3px}
+.seg{flex:1;min-width:0;height:22px;padding:0;border:0;background:none;cursor:pointer;display:flex;align-items:center}
+.seg::before{content:"";display:block;width:100%;height:5px;border-radius:3px;background:var(--rule);transition:background-color .25s}
+.seg.done::before{background:var(--forest)}
+.seg[aria-current="step"]::before{background:linear-gradient(90deg, var(--blade) calc(var(--p, 0) * 100%), var(--blade-soft) 0)}
+.ro-controls{display:grid;grid-template-columns:44px 1fr 44px;gap:8px}
+.ctl{min-height:44px;border:0;border-radius:999px;background:var(--surface);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-family:var(--display);font-weight:800;font-size:.98rem;cursor:pointer}
+.ctl:hover{background:var(--rule)}
+.ctl svg{width:16px;height:16px;fill:currentColor}
+.ctl--play{background:var(--forest);color:var(--on-forest)}
+.ctl--play:hover{background:var(--forest-hover)}
+.plan figcaption{grid-column:1 / -1;font-size:.88rem;color:var(--muted)}
+
+/* Phone frames */
+.phone{background:var(--bezel);padding:3%;border-radius:15% / 7%;box-shadow:0 0 0 1px var(--bezel-edge), var(--shadow);width:100%}
+.phone img{width:100%;border-radius:12.5% / 5.9%}
+
+/* How it works */
+.how{border-top:1px solid var(--rule)}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:clamp(28px, 4vw, 56px)}
+.step{display:grid;gap:26px;align-content:start}
+.step .phone{max-width:272px}
+.step-copy{display:grid;gap:8px}
+.step-no{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text)}
+.step-copy p:last-child{color:var(--muted)}
+
+/* 3D saw band */
+.band{background:var(--band);color:var(--band-ink)}
+.band .wrap{padding-block:clamp(64px, 9vw, 112px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:clamp(40px, 7vw, 96px);align-items:center}
+.band .eyebrow{color:var(--band-accent)}
+.band-copy{display:grid;gap:20px;max-width:36em}
+.band-copy > p{font-size:1.12rem;color:var(--band-muted)}
+.saw-list{margin:8px 0 0;padding:0;list-style:none;display:grid;border-top:1px solid rgba(247,244,236,.18)}
+.saw-list li{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:16px;padding-block:14px;border-bottom:1px solid rgba(247,244,236,.18)}
+.saw-list b{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--band-accent);padding-top:3px}
+.saw-list span{color:var(--band-ink)}
+.band .phone{max-width:320px;justify-self:center}
+
+/* Shop specs */
+.shop .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(40px, 7vw, 96px);align-items:start}
+.shop-lead{display:grid;gap:18px}
+.kerf-callout{margin-top:22px;display:grid;gap:14px;max-width:30em}
+.kerf-figure{font-family:var(--display);font-weight:900;font-size:clamp(5.5rem, 4rem + 6vw, 9rem);line-height:.85;color:var(--forest-text);letter-spacing:-.03em}
+.kerf-callout > p:not(.kerf-figure){color:var(--muted)}
+.kerf-strip{width:100%;max-width:360px;height:auto}
+.kerf-strip .k-part{fill:var(--forest)}
+.kerf-strip .k-cut{fill:var(--blade);transition:fill .3s}
+.kerf-strip .k-uncut{fill:var(--forest)}
+.kerf-strip text{fill:var(--muted);font-family:var(--mono);font-weight:600;font-size:10px}
+.kerf-note{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.specs{margin:0;display:grid;border-top:1.5px solid var(--ink)}
+.spec{display:grid;grid-template-columns:9.5em minmax(0,1fr);gap:20px;padding-block:17px;border-bottom:1px solid var(--rule)}
+.spec dt{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding-top:3px}
+.spec dd{margin:0;color:var(--muted)}
+
+/* Privacy */
+.privacy{background:var(--paper-deep)}
+.privacy h2{max-width:14em}
+.facts{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:clamp(24px, 4vw, 48px);margin-top:clamp(32px, 5vw, 52px)}
+.fact{display:grid;gap:8px;align-content:start;padding-top:16px;border-top:1.5px solid var(--ink)}
+.fact h3{font-size:1.15rem}
+.fact p{color:var(--muted)}
+
+/* Pricing */
+.plans{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:24px;max-width:900px}
+.plan-card{background:var(--surface);border:1px solid var(--rule);border-radius:24px;padding:clamp(24px, 3vw, 34px);display:grid;grid-template-rows:auto auto 1fr auto;gap:22px}
+.plan-card--pro{border:2px solid var(--forest)}
+.plan-name{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text)}
+.plan-top{display:grid;gap:6px}
+.price{display:flex;align-items:baseline;gap:8px;font-variant-numeric:tabular-nums}
+.price b{font-family:var(--display);font-weight:900;font-size:3rem;line-height:1}
+.price span{color:var(--muted)}
+.plan-sub{color:var(--muted)}
+.plan-note{font-size:.95rem;font-weight:650;color:var(--forest-text)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:11px;align-content:start}
+.checks li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px}
+.checks li::before{content:"";width:11px;height:6px;margin:7px 0 0 3px;border-left:2.5px solid var(--forest-text);border-bottom:2.5px solid var(--forest-text);transform:rotate(-45deg)}
+.plan-foot{font-size:.95rem;color:var(--muted)}
+.plan-card .store{justify-self:start;min-height:52px;font-size:1.05rem}
+.fineprint{margin-top:28px;max-width:58em;font-size:.84rem;color:var(--muted)}
+
+/* Final call to action */
+.final{border-top:1px solid var(--rule)}
+.final .wrap{display:grid;gap:26px;justify-items:start}
+.final h2{max-width:13em;font-size:clamp(2.3rem, 1.4rem + 3.6vw, 4.4rem)}
+
+/* Footer */
+.site-foot{border-top:1px solid var(--rule);font-size:.92rem;color:var(--muted)}
+.foot-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;padding-block:30px}
+.foot-brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:650;margin-right:auto}
+.foot-brand img{width:26px;height:26px;border-radius:22.5%}
+.foot-links{display:flex;flex-wrap:wrap;gap:10px 22px}
+.foot-links a{text-underline-offset:4px}
+.foot-note{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-top:14px;border-top:1px solid var(--rule)}
+
+@media (max-width: 1040px){
+  .hero-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "copy" "plan" "block"}
+  .plan{justify-self:start}
+  .band .wrap{grid-template-columns:minmax(0,1fr) minmax(0,280px)}
+}
+@media (max-width: 860px){
+  .head-nav{display:none}
+  .steps{grid-template-columns:minmax(0,1fr);gap:40px}
+  .step{grid-template-columns:minmax(0,42%) minmax(0,1fr);align-items:center;gap:22px}
+  .shop .wrap{grid-template-columns:minmax(0,1fr)}
+  .facts{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 680px){
+  body{font-size:16px}
+  .plan{grid-template-columns:minmax(0,1fr);justify-self:stretch;gap:16px}
+  .sheet-wrap{width:min(100%, 264px);justify-self:center}
+  .band .wrap{grid-template-columns:minmax(0,1fr)}
+  .band .phone{max-width:270px}
+  .plans{grid-template-columns:minmax(0,1fr)}
+  .spec,.saw-list li{grid-template-columns:minmax(0,1fr);gap:4px}
+  .store{width:100%;justify-content:center}
+  .plan-card .store{width:auto}
+}
+@media (max-width: 420px){
+  .wrap{padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+  .title-block{grid-template-columns:minmax(0,1fr)}
+  .title-block > div:nth-child(odd){border-right:0}
+  .step{grid-template-columns:minmax(0,1fr)}
+  .step .phone{max-width:240px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{transition:none !important}
+}
+</style>
+</head>
+<body>
+<header class="site-head" id="top">
+  <div class="wrap head-row">
+    <a class="brand" href="#top"><img src="img/icon.png" alt="" width="38" height="38"><span class="wordmark">Xylo Kerf</span></a>
+    <nav class="head-nav" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#saw">3D preview</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <a class="btn-sm" href="https://apps.apple.com/app/apple-store/id6766369684?pt=128506660&amp;ct=xylokerf_site&amp;mt=8">Get the app</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="headline">
+    <div class="wrap hero-grid">
+      <div class="hero-head">
+        <p class="eyebrow">Cut list optimizer for iPhone and iPad</p>
+        <h1 id="headline">Measurements in.<br><span class="second">Cutting plan out.</span></h1>
+      </div>
+
+      <div class="hero-copy">
+        <p class="lede">XyloKerf lays out your parts on plywood, MDF and boards with the blade kerf, grain direction and trim margins accounted for. Then it walks you through every rip and crosscut in order.</p>
+        <div>
+          <a class="store" href="https://apps.apple.com/app/apple-store/id6766369684?pt=128506660&amp;ct=xylokerf_site&amp;mt=8">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+            <span><small>Download on the</small>App Store</span>
+          </a>
+        </div>
+        <p class="fine"><strong>Free for up to 3 active projects.</strong> No account needed. For iPhone and iPad with iOS 17 or later.</p>
+      </div>
+
+      <dl class="title-block" aria-label="Example plan details">
+        <div><dt class="tb-label">Project</dt><dd class="tb-value" style="margin:0">Garage cabinet</dd></div>
+        <div><dt class="tb-label">Stock</dt><dd class="tb-value" style="margin:0">3/4" birch ply, 48" × 96"</dd></div>
+        <div><dt class="tb-label">Parts on sheet 1</dt><dd class="tb-value" style="margin:0">7</dd></div>
+        <div><dt class="tb-label">Saw cuts</dt><dd class="tb-value" style="margin:0">11, kerf 1/8"</dd></div>
+        <div class="tb-wide"><dt class="tb-label">Key</dt><dd style="margin:0" class="legend"><span><i class="sw-part"></i>Part</span><span><i class="sw-rot"></i>Rotated part</span><span><i class="sw-off"></i>Offcut</span></dd></div>
+      </dl>
+
+      <figure class="plan" aria-label="Animated example of a XyloKerf cutting plan">
+        <div class="sheet-wrap">
+          <svg id="sheet" viewBox="-8 -8 58 108" role="img" aria-labelledby="sheetTitle">
+            <title id="sheetTitle">Cutting layout for one 48 by 96 inch sheet of birch plywood: two cabinet sides, a bottom, two shelves and two top stretchers, with 11 saw cuts.</title>
+          </svg>
+        </div>
+        <div class="readout" id="readout" aria-live="off">
+          <div class="ro-top"><span id="cutCount">Cut 1 of 11</span><span class="ro-type" id="cutType">Crosscut</span></div>
+          <p class="ro-text" id="cutText">Crosscut 34 1/2" from the top edge for Left side 1; keep the kerf past the part (48" cut).</p>
+          <p class="ro-meta" id="cutMeta">48" cut · kerf 1/8"</p>
+          <div class="ro-progress" id="segments" role="group" aria-label="Jump to a cut"></div>
+          <div class="ro-controls">
+            <button class="ctl" id="prevBtn" type="button" aria-label="Previous cut"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+            <button class="ctl ctl--play" id="playBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true" id="playIcon"><path d="M4 2l10 6-10 6z"/></svg><span id="playLabel">Play</span></button>
+            <button class="ctl" id="nextBtn" type="button" aria-label="Next cut"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+          </div>
+        </div>
+        <figcaption>Example: sheet 1 of a garage cabinet, with the cut instructions XyloKerf gives at the saw. Cut pieces slide apart so you can see each one.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section how" id="how" aria-labelledby="howTitle">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="howTitle">From a list of parts to the first cut.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <div class="phone"><img src="img/setup.jpg" width="635" height="1380" alt="XyloKerf project screen for a garage cabinet, listing two birch plywood materials with size, kerf and cost."></div>
+          <div class="step-copy">
+            <p class="step-no">Step 1</p>
+            <h3>Enter your stock and parts</h3>
+            <p>Add sheets, boards and offcuts with size, quantity, kerf and cost. Then type your parts in, paste a list, or import a photo of a written cut list. You review every row before it's added.</p>
+          </div>
+        </li>
+        <li class="step">
+          <div class="phone"><img src="img/layout.jpg" width="635" height="1380" alt="XyloKerf sheet detail showing cabinet parts laid out on a 48 by 96 inch plywood sheet, with the next crosscut highlighted."></div>
+          <div class="step-copy">
+            <p class="step-no">Step 2</p>
+            <h3>Get the layout</h3>
+            <p>XyloKerf tries several layout strategies and keeps the one that uses your stock best. If a part can't fit, it tells you which one and why.</p>
+          </div>
+        </li>
+        <li class="step">
+          <div class="phone"><img src="img/steps.jpg" width="635" height="1380" alt="XyloKerf saw cut sequence listing numbered crosscut and rip instructions with cut lengths and kerf."></div>
+          <div class="step-copy">
+            <p class="step-no">Step 3</p>
+            <h3>Cut in order</h3>
+            <p>Follow numbered trim, rip and crosscut steps and check them off as you go. Your progress is saved, so you can stop for the day and pick up at the next cut.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="saw" aria-labelledby="sawTitle">
+    <div class="wrap">
+      <div class="band-copy">
+        <p class="eyebrow">3D table saw preview</p>
+        <h2 id="sawTitle">Watch every cut before you make it.</h2>
+        <p>Each sheet's cut sequence plays on a 3D table saw. The workpiece turns between rips and crosscuts, feeds through the blade, and the part comes free with the kerf left behind.</p>
+        <ul class="saw-list">
+          <li><b>Play</b><span>Run the sheet from the first cut to the last, at the speed you pick.</span></li>
+          <li><b>Scrub</b><span>Drag the feed slider to move the board through the blade.</span></li>
+          <li><b>Step</b><span>Go forward or back one cut at a time.</span></li>
+          <li><b>Orbit</b><span>Drag to turn the saw around and pinch to zoom in.</span></li>
+        </ul>
+      </div>
+      <div class="phone"><img src="img/saw.jpg" width="635" height="1380" alt="XyloKerf 3D table saw preview with a birch plywood sheet on the saw and the first crosscut of 11 ready to play."></div>
+    </div>
+  </section>
+
+  <section class="section shop" id="shop" aria-labelledby="shopTitle">
+    <div class="wrap">
+      <div class="shop-lead">
+        <p class="eyebrow">Built around real stock</p>
+        <h2 id="shopTitle">Layouts that respect your shop.</h2>
+        <div class="kerf-callout">
+          <p class="kerf-figure" aria-hidden="true">½″</p>
+          <svg class="kerf-strip" viewBox="0 0 320 50" role="img" aria-label="A board cut into five parts by four saw kerfs.">
+            <text x="60.8" y="10" text-anchor="middle">1/8"</text>
+            <text x="126.4" y="10" text-anchor="middle">1/8"</text>
+            <text x="192" y="10" text-anchor="middle">1/8"</text>
+            <text x="257.6" y="10" text-anchor="middle">1/8"</text>
+            <rect class="k-part" x="0" y="18" width="56.8" height="26" rx="2"/>
+            <rect class="k-cut" x="56.8" y="18" width="8" height="26"/>
+            <rect class="k-part" x="64.8" y="18" width="57.6" height="26" rx="2"/>
+            <rect class="k-cut" x="122.4" y="18" width="8" height="26"/>
+            <rect class="k-part" x="130.4" y="18" width="57.6" height="26" rx="2"/>
+            <rect class="k-cut" x="188" y="18" width="8" height="26"/>
+            <rect class="k-part" x="196" y="18" width="57.6" height="26" rx="2"/>
+            <rect class="k-cut" x="253.6" y="18" width="8" height="26"/>
+            <rect class="k-part" x="261.6" y="18" width="58.4" height="26" rx="2"/>
+          </svg>
+          <p class="kerf-note">Kerf drawn wider than scale.</p>
+          <p>Four rips with a 1/8" blade turn half an inch of plywood into sawdust. XyloKerf leaves room for every kerf, so the last part off the sheet still comes out full size.</p>
+        </div>
+      </div>
+      <dl class="specs">
+        <div class="spec"><dt>Kerf</dt><dd>Set your blade's kerf for each material.</dd></div>
+        <div class="spec"><dt>Grain</dt><dd>Lock grain direction on parts that show, so they stay aligned with the sheet.</dd></div>
+        <div class="spec"><dt>Rotation</dt><dd>Let plain parts turn when that fits more on a sheet.</dd></div>
+        <div class="spec"><dt>Trim</dt><dd>Take the factory edges off before the first cut.</dd></div>
+        <div class="spec"><dt>Edge banding</dt><dd>Mark banded edges and add notes. They follow the part onto the plan, the checklist and exports.</dd></div>
+        <div class="spec"><dt>Stock</dt><dd>Plywood, MDF, sheet goods, dimensional boards and offcuts, with quantity and cost.</dd></div>
+        <div class="spec"><dt>Units</dt><dd>Inches, fractions or millimeters.</dd></div>
+        <div class="spec"><dt>Fit checks</dt><dd>When a part can't fit, you get a clear warning that says why.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section privacy" id="privacy" aria-labelledby="privacyTitle">
+    <div class="wrap">
+      <p class="eyebrow">Privacy</p>
+      <h2 id="privacyTitle" style="margin-top:14px">No account. No ads. No tracking.</h2>
+      <div class="facts">
+        <div class="fact">
+          <h3>Stays on your device</h3>
+          <p>Projects are planned and saved on your iPhone or iPad, and the planner works offline in the shop.</p>
+        </div>
+        <div class="fact">
+          <h3>Backups you control</h3>
+          <p>Back up and restore your projects through Files or iCloud Drive.</p>
+        </div>
+        <div class="fact">
+          <h3>Private photo import</h3>
+          <p>Text recognition only sees the photo you choose, and it runs on your device.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pricing" id="pricing" aria-labelledby="pricingTitle">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Pricing</p>
+        <h2 id="pricingTitle">Start free. Go Pro when the shop gets busy.</h2>
+      </div>
+      <div class="plans">
+        <article class="plan-card">
+          <div class="plan-top">
+            <p class="plan-name">Free</p>
+            <p class="price"><b>$0</b></p>
+            <p class="plan-sub">The complete planner</p>
+          </div>
+          <p class="plan-note">No account needed.</p>
+          <ul class="checks">
+            <li>Up to 3 active projects</li>
+            <li>Every layout and cut-sequence feature</li>
+            <li>3D table saw preview</li>
+            <li>A sample project that doesn't count toward your 3</li>
+            <li>Backup and restore through Files or iCloud Drive</li>
+          </ul>
+          <a class="store" href="https://apps.apple.com/app/apple-store/id6766369684?pt=128506660&amp;ct=xylokerf_site&amp;mt=8">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+            <span>Download free</span>
+          </a>
+        </article>
+        <article class="plan-card plan-card--pro">
+          <div class="plan-top">
+            <p class="plan-name">XyloKerf Pro</p>
+            <p class="price"><b>$39.99</b><span>per year</span></p>
+            <p class="plan-sub">That's $3.33 a month. Or pay $4.99 monthly.</p>
+          </div>
+          <p class="plan-note">Try it free for 7 days with the yearly plan.</p>
+          <ul class="checks">
+            <li>Everything in Free</li>
+            <li>Unlimited active projects</li>
+            <li>Printed shop packets with measurements, warnings and checklists</li>
+            <li>PDF shop packets and CSV cut lists</li>
+            <li>SVG and DXF files for CAD and CNC</li>
+          </ul>
+          <p class="plan-foot">Upgrade from inside the app whenever you need it.</p>
+        </article>
+      </div>
+      <p class="fineprint">US prices. Prices are shown in the app before you buy and may vary by country or region. The free trial is for eligible new subscribers. XyloKerf Pro is an optional auto-renewable subscription that renews unless canceled at least 24 hours before the end of the current period. Manage or cancel it in your App Store account settings.</p>
+    </div>
+  </section>
+
+  <section class="section final" aria-labelledby="finalTitle">
+    <div class="wrap">
+      <h2 id="finalTitle">Cut smarter before the first board moves.</h2>
+      <a class="store" href="https://apps.apple.com/app/apple-store/id6766369684?pt=128506660&amp;ct=xylokerf_site&amp;mt=8">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+        <span><small>Download on the</small>App Store</span>
+      </a>
+      <p class="fine">Free on iPhone and iPad. Requires iOS 17 or later.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-row">
+    <div class="foot-brand"><img src="img/icon.png" alt="" width="26" height="26">XyloKerf</div>
+    <nav class="foot-links" aria-label="Legal and support">
+      <a href="https://sergemoraru.github.io/xylokerf-support/support.html">Support</a>
+      <a href="https://sergemoraru.github.io/xylokerf-support/privacy.html">Privacy policy</a>
+      <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of use</a>
+    </nav>
+    <div class="foot-note"><span>Always check measurements and layouts before cutting.</span><span>© 2026 XyloKerf</span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('sheet');
+  const wrap = svg.parentElement;
+  const K = 0.125, GAP = 0.75;
+  const reduceMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce = reduceMQ.matches;
+
+  // Sheet 1 of the garage cabinet sample, in inches, with a 1/8" kerf between pieces.
+  const parts = [
+    { name: 'Left side 1', x: 0, y: 0, w: 23.25, h: 34.5, dims: '23 1/4" × 34 1/2"', freeAt: 1 },
+    { name: 'Left side 2', x: 23.375, y: 0, w: 23.25, h: 34.5, dims: '23 1/4" × 34 1/2"', freeAt: 2 },
+    { name: 'Bottom', x: 0, y: 34.625, w: 31.75, h: 22.5, dims: '31 3/4" × 22 1/2"', rot: true, freeAt: 4 },
+    { name: 'Shelf 2', x: 0, y: 57.25, w: 22.5, h: 31.5, dims: '22 1/2" × 31 1/2"', freeAt: 6 },
+    { name: 'Shelf 1', x: 22.625, y: 57.25, w: 22.5, h: 31.5, dims: '22 1/2" × 31 1/2"', freeAt: 7 },
+    { name: 'Top stretcher 1', x: 0, y: 88.875, w: 31.75, h: 3.5, dims: '31 3/4" × 3 1/2"', rot: true, freeAt: 9 },
+    { name: 'Top stretcher 2', x: 0, y: 92.5, w: 31.75, h: 3.5, dims: '31 3/4" × 3 1/2"', rot: true, freeAt: 10 }
+  ];
+  const offcuts = [
+    { x: 46.75, y: 0, w: 1.25, h: 34.5 },
+    { x: 31.875, y: 34.625, w: 16.125, h: 22.5 },
+    { x: 45.25, y: 57.25, w: 2.75, h: 31.5 },
+    { x: 31.875, y: 88.875, w: 16.125, h: 3.5 },
+    { x: 31.875, y: 92.5, w: 16.125, h: 3.5, label: true }
+  ];
+
+  // Cuts in the order XyloKerf lists them. piece is the stock being cut [x0, y0, x1, y1]; pos is the kerf centerline.
+  const cuts = [
+    { type: 'Crosscut', piece: [0, 0, 48, 96], pos: 34.5625, len: '48"', text: 'Crosscut 34 1/2" from the top edge for Left side 1; keep the kerf past the part (48" cut).' },
+    { type: 'Rip', piece: [0, 0, 48, 34.5], pos: 23.3125, len: '34 1/2"', text: 'Rip 23 1/4" from the left edge for Left side 1; keep the kerf past the part (34 1/2" cut).' },
+    { type: 'Rip', piece: [23.375, 0, 48, 34.5], pos: 46.6875, len: '34 1/2"', text: 'Rip 23 1/4" from the left edge for Left side 2; keep the kerf past the part (34 1/2" cut, stock X 46 5/8").' },
+    { type: 'Crosscut', piece: [0, 34.625, 48, 96], pos: 57.1875, len: '48"', text: 'Crosscut 22 1/2" from the top edge for Bottom; keep the kerf past the part (48" cut, stock Y 57 1/8").' },
+    { type: 'Rip', piece: [0, 34.625, 48, 57.125], pos: 31.8125, len: '22 1/2"', text: 'Rip 31 3/4" from the left edge for Bottom; keep the kerf past the part (22 1/2" cut).' },
+    { type: 'Crosscut', piece: [0, 57.25, 48, 96], pos: 88.8125, len: '48"', text: 'Crosscut 31 1/2" from the top edge for Shelf 2; keep the kerf past the part (48" cut, stock Y 88 3/4").' },
+    { type: 'Rip', piece: [0, 57.25, 48, 88.75], pos: 22.5625, len: '31 1/2"', text: 'Rip 22 1/2" from the left edge for Shelf 2; keep the kerf past the part (31 1/2" cut).' },
+    { type: 'Rip', piece: [22.625, 57.25, 48, 88.75], pos: 45.1875, len: '31 1/2"', text: 'Rip 22 1/2" from the left edge for Shelf 1; keep the kerf past the part (31 1/2" cut, stock X 45 1/8").' },
+    { type: 'Crosscut', piece: [0, 88.875, 48, 96], pos: 92.4375, len: '48"', text: 'Crosscut 3 1/2" from the top edge for Top stretcher 1; keep the kerf past the part (48" cut, stock Y 92 3/8").' },
+    { type: 'Rip', piece: [0, 88.875, 48, 92.375], pos: 31.8125, len: '3 1/2"', text: 'Rip 31 3/4" from the left edge for Top stretcher 1; keep the kerf past the part (3 1/2" cut).' },
+    { type: 'Rip', piece: [0, 92.5, 48, 96], pos: 31.8125, len: '3 1/2"', text: 'Rip 31 3/4" from the left edge for Top stretcher 2; keep the kerf past the part (3 1/2" cut).' }
+  ];
+  for (const c of cuts) {
+    const [x0, y0, x1, y1] = c.piece;
+    const cross = c.type === 'Crosscut';
+    c.a = cross ? [x0, c.pos] : [c.pos, y0];
+    c.dir = cross ? [1, 0] : [0, 1]; // blade travel
+    c.n = cross ? [0, 1] : [1, 0]; // the far piece slides this way
+    c.L = cross ? x1 - x0 : y1 - y0;
+    c.strip = cross ? [x0, c.pos - K / 2, x1 - x0, K] : [c.pos - K / 2, y0, K, y1 - y0];
+  }
+
+  const el = (tag, attrs, parent) => {
+    const node = document.createElementNS(NS, tag);
+    for (const k in attrs) node.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(node);
+    return node;
+  };
+  const set = (node, name, value) => {
+    const c = node._c || (node._c = {});
+    if (c[name] !== value) { c[name] = value; node.setAttribute(name, value); }
+  };
+  const f3 = v => Math.round(v * 1000) / 1000;
+  const clamp = v => v < 0 ? 0 : v > 1 ? 1 : v;
+  const easeOutCubic = u => 1 - Math.pow(1 - u, 3);
+  const easeOutQuart = u => 1 - Math.pow(1 - u, 4);
+  const easeInOutCubic = u => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+  // Saw feed: ramp up, steady, ramp down (15% each end), normalized to travel 0..1.
+  const RAMP = 0.15, VMAX = 1 / (1 - RAMP);
+  const travel = u => u < RAMP ? .5 * VMAX * u * u / RAMP : u > 1 - RAMP ? 1 - .5 * VMAX * (1 - u) * (1 - u) / RAMP : .5 * VMAX * RAMP + VMAX * (u - RAMP);
+  const speedAt = u => u < RAMP ? u / RAMP : u > 1 - RAMP ? (1 - u) / RAMP : 1;
+  const inch = v => {
+    const e = Math.round(v * 8), whole = Math.floor(e / 8);
+    let n = e % 8, d = 8;
+    while (n && n % 2 === 0) { n /= 2; d /= 2; }
+    return n ? (whole ? `${whole} ${n}/${d}` : `${n}/${d}`) : `${whole}`;
+  };
+
+  // Static drawing: grain pattern and dimension lines
+  const defs = el('defs', {}, svg);
+  const pat = el('pattern', { id: 'xk-grain', patternUnits: 'userSpaceOnUse', width: 6, height: 96 }, defs);
+  el('path', { class: 'grain-line', d: 'M3 0 C4.3 30 1.7 62 3.4 96' }, pat);
+
+  const dims = el('g', { class: 'dim' }, svg);
+  el('line', { x1: 0, y1: -4, x2: 48, y2: -4 }, dims);
+  el('line', { x1: 0, y1: -5.5, x2: 0, y2: -2.5 }, dims);
+  el('line', { x1: 48, y1: -5.5, x2: 48, y2: -2.5 }, dims);
+  el('rect', { x: 19.5, y: -5.8, width: 9, height: 3.6 }, dims);
+  el('text', { x: 24, y: -4, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, dims).textContent = '48"';
+  el('line', { x1: -4, y1: 0, x2: -4, y2: 96 }, dims);
+  el('line', { x1: -5.5, y1: 0, x2: -2.5, y2: 0 }, dims);
+  el('line', { x1: -5.5, y1: 96, x2: -2.5, y2: 96 }, dims);
+  el('rect', { x: -5.8, y: 43.5, width: 3.6, height: 9 }, dims);
+  el('text', { x: -4, y: 48, 'text-anchor': 'middle', 'dominant-baseline': 'central', transform: 'rotate(-90 -4 48)' }, dims).textContent = '96"';
+
+  // The sheet is built from leaves that tile it exactly: offcuts, parts, and one 1/8" kerf strip per cut.
+  const shadowLayer = el('g', {}, svg);
+  const leafLayer = el('g', {}, svg);
+  const leaves = [];
+  const addLeaf = (kind, x, y, w, h, extra) => {
+    const l = Object.assign({ kind, x, y, w, h, cx: x + w / 2, cy: y + h / 2, g: el('g', {}, leafLayer) }, extra);
+    leaves.push(l);
+    return l;
+  };
+
+  for (const o of offcuts) {
+    const l = addLeaf('off', o.x, o.y, o.w, o.h);
+    el('rect', { class: 'o-rect', x: o.x, y: o.y, width: o.w, height: o.h }, l.g);
+    el('rect', { x: o.x, y: o.y, width: o.w, height: o.h, fill: 'url(#xk-grain)' }, l.g);
+    if (o.label) el('text', { class: 'sheet-size', x: 40, y: 94.25, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, l.g).textContent = '48" × 96"';
+  }
+
+  for (const p of parts) {
+    const small = p.h < 8;
+    const l = addLeaf('part', p.x, p.y, p.w, p.h);
+    l.g.setAttribute('class', 'part' + (p.rot ? ' rot' : '') + (small ? ' p-small' : ''));
+    el('rect', { class: 'p-rect', x: p.x, y: p.y, width: p.w, height: p.h }, l.g);
+    const cx = p.x + p.w / 2, cy = p.y + p.h / 2;
+    if (small) {
+      const t = el('text', { x: cx, y: cy, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, l.g);
+      el('tspan', { class: 'p-name' }, t).textContent = p.name + '  ';
+      el('tspan', { class: 'p-dims' }, t).textContent = p.dims;
+    } else {
+      el('text', { class: 'p-name', x: cx, y: cy - 1.4, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, l.g).textContent = p.name;
+      el('text', { class: 'p-dims', x: cx, y: cy + 1.5, 'text-anchor': 'middle', 'dominant-baseline': 'central' }, l.g).textContent = p.dims;
+    }
+    p.br = small ? 1.25 : 1.6;
+    p.bx = f3(p.x + p.w - p.br - 0.7);
+    p.by = f3(small ? cy : p.y + p.br + 0.7);
+    p.badge = el('g', { class: 'badge', opacity: 0 }, l.g);
+    el('circle', { r: 1.6 }, p.badge);
+    el('path', { d: 'M-0.7 0 L-0.15 0.6 L0.8 -0.55' }, p.badge);
+  }
+
+  cuts.forEach((c, k) => {
+    const [x, y, w, h] = c.strip;
+    const l = addLeaf('strip', x, y, w, h, { cut: k });
+    l.rect = el('rect', { class: 'k-strip', x, y, width: w, height: h }, l.g);
+    c.groove = el('line', { class: 'groove', visibility: 'hidden' }, l.g);
+    c.mark = el('line', { class: 'mark', visibility: 'hidden' }, l.g);
+    c.leaf = l;
+  });
+
+  for (const l of leaves) {
+    if (l.kind !== 'strip') l.sh = el('rect', { class: 'shadow', x: l.x, y: l.y, width: l.w, height: l.h }, shadowLayer);
+    // Every cut whose far side holds this leaf pushes it GAP inches along that cut's normal.
+    l.movers = [];
+    cuts.forEach((c, k) => {
+      if (l.cut === k) return;
+      const [x0, y0, x1, y1] = c.piece;
+      const inside = l.cx > x0 && l.cx < x1 && l.cy > y0 && l.cy < y1;
+      const beyond = c.type === 'Crosscut' ? l.cy > c.pos : l.cx > c.pos;
+      if (inside && beyond) l.movers.push(k);
+    });
+  }
+
+  // Saw blade, seen from above
+  const blade = el('g', { opacity: 0 }, svg);
+  const ring = el('circle', { class: 'bl-ring', r: 3.9, opacity: 0 }, blade);
+  const rotor = el('g', {}, blade);
+  let teeth = '';
+  for (let i = 0; i < 24; i++) {
+    const a = i * Math.PI / 12;
+    const pt = (r, da) => `${f3(r * Math.cos(a + da))} ${f3(r * Math.sin(a + da))}`;
+    teeth += (i ? 'L' : 'M') + pt(3.15, 0) + 'L' + pt(3.72, 0.07) + 'L' + pt(3.22, 0.24);
+  }
+  el('path', { class: 'bl-teeth', d: teeth + 'Z' }, rotor);
+  el('circle', { class: 'bl-disc', r: 3.05 }, rotor);
+  for (let i = 0; i < 4; i++) {
+    const a = i * Math.PI / 2 + 0.4;
+    el('line', { class: 'bl-slot', x1: f3(1.6 * Math.cos(a)), y1: f3(1.6 * Math.sin(a)), x2: f3(2.55 * Math.cos(a + 0.18)), y2: f3(2.55 * Math.sin(a + 0.18)) }, rotor);
+  }
+  el('circle', { class: 'bl-hub', r: 0.95 }, rotor);
+  el('circle', { class: 'bl-arbor', r: 0.36 }, blade);
+
+  // Sawdust on a canvas laid over the drawing, in sheet inches
+  const MAX = 120;
+  const D = { x: new Float32Array(MAX), y: new Float32Array(MAX), z: new Float32Array(MAX), vx: new Float32Array(MAX), vy: new Float32Array(MAX), vz: new Float32Array(MAX), life: new Float32Array(MAX), size: new Float32Array(MAX), col: new Uint8Array(MAX) };
+  let canvas = null, ctx = null, scale = 1, dpr = 1, ringIdx = 0, alive = 0, colors = ['#9B7A4D', '#D7B98A'];
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const spread = w => (Math.random() + Math.random() + Math.random() - 1.5) * w * 1.6;
+
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement);
+    colors = [cs.getPropertyValue('--dust').trim() || colors[0], cs.getPropertyValue('--oak').trim() || colors[1]];
+  }
+  function sizeCanvas() {
+    if (!canvas) return;
+    const r = svg.getBoundingClientRect();
+    if (!r.width) return;
+    scale = r.width / 58;
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    const cw = r.width + 32, ch = r.height + 32;
+    canvas.style.width = cw + 'px';
+    canvas.style.height = ch + 'px';
+    canvas.width = Math.round(cw * dpr);
+    canvas.height = Math.round(ch * dpr);
+  }
+  function setupCanvas() {
+    if (canvas || reduce) return;
+    canvas = document.createElement('canvas');
+    canvas.className = 'dust';
+    canvas.setAttribute('aria-hidden', 'true');
+    wrap.appendChild(canvas);
+    ctx = canvas.getContext('2d');
+    sizeCanvas();
+    readColors();
+    if ('ResizeObserver' in window) new ResizeObserver(sizeCanvas).observe(svg);
+  }
+  function spawn(x, y, ang, speed, vz, life) {
+    const i = ringIdx;
+    ringIdx = (ringIdx + 1) % MAX;
+    D.x[i] = x; D.y[i] = y; D.z[i] = 0.2;
+    D.vx[i] = Math.cos(ang) * speed; D.vy[i] = Math.sin(ang) * speed; D.vz[i] = vz;
+    D.life[i] = life; D.size[i] = rnd(1.2, 2.3); D.col[i] = Math.random() < .25 ? 1 : 0;
+  }
+  function stepDust(dt) {
+    let n = 0;
+    for (let i = 0; i < MAX; i++) {
+      if (D.life[i] <= 0) continue;
+      D.life[i] -= dt;
+      if (D.z[i] > 0 || D.vz[i] > 0) {
+        D.vz[i] -= 70 * dt;
+        D.z[i] += D.vz[i] * dt;
+        const drag = Math.exp(-1.6 * dt);
+        D.vx[i] *= drag; D.vy[i] *= drag;
+        if (D.z[i] <= 0) { D.z[i] = 0; D.vz[i] = 0; }
+      } else {
+        const friction = Math.exp(-16 * dt);
+        D.vx[i] *= friction; D.vy[i] *= friction;
+      }
+      D.x[i] += D.vx[i] * dt;
+      D.y[i] += D.vy[i] * dt;
+      if (D.life[i] > 0) n++;
+    }
+    alive = n;
+  }
+  function drawDust() {
+    if (!ctx) return;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!alive) return;
+    const k = dpr * scale, o = dpr * (16 + 8 * scale);
+    ctx.setTransform(k, 0, 0, k, o, o);
+    for (let c = 0; c < 2; c++) {
+      ctx.fillStyle = colors[c];
+      for (let i = 0; i < MAX; i++) {
+        if (D.life[i] <= 0 || D.col[i] !== c) continue;
+        ctx.globalAlpha = Math.min(1, D.life[i] / 0.5) * 0.9;
+        const s = D.size[i] / scale;
+        ctx.fillRect(D.x[i] - s / 2, D.y[i] - D.z[i] * 0.35 - s / 2, s, s);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  function clearDust() { D.life.fill(0); alive = 0; drawDust(); }
+  function chip(x, y, c) {
+    if (Math.random() < .7) {
+      spawn(x, y, Math.atan2(-c.dir[1], -c.dir[0]) + spread(.45), rnd(12, 30), rnd(6, 14), rnd(.9, 1.6));
+    } else {
+      const side = Math.atan2(c.n[1], c.n[0]) + (Math.random() < .5 ? Math.PI : 0);
+      spawn(x, y, side + spread(.35), rnd(3, 8), rnd(2, 5), rnd(1.6, 2.2));
+    }
+  }
+
+  // Timeline: each cut is one act (settle, spin up, feed, break through, slide apart), then hold and reassemble.
+  const SPIN = 300, TAIL = 560, HOLD = 2600, RESET = 900, PARK = 260, LAST = cuts.length - 1;
+  const feedDur = c => 280 + 16 * c.L;
+  let mode = 'act', cur = 0, t = PARK, settle = 960;
+  let intent = !reduce, running = false, visible = true, rate = 1, stopAt = null;
+  let angle = 0, sigma = 0, emitAcc = 0, blendAt = -1e9, prevOff = null;
+  const tB = () => settle + SPIN + feedDur(cuts[cur]);
+
+  function feedState() {
+    const c = cuts[cur];
+    const u = clamp((t - settle - SPIN) / feedDur(c));
+    const s = travel(u) * (c.L + 1) - 1; // blade starts 1" before the stock
+    return { u, s, front: Math.max(0, Math.min(c.L, s)) };
+  }
+  function cutProgress(k) {
+    if (mode !== 'act' || k < cur) return 1;
+    if (k > cur) return 0;
+    return easeOutQuart(clamp((t - tB() - 60) / 380));
+  }
+  function offsetOf(l, now) {
+    let ox = 0, oy = 0;
+    if (!reduce) {
+      const f = mode === 'reset' ? 1 - easeInOutCubic(clamp(t / 800)) : 1;
+      for (const k of l.movers) {
+        const d = cutProgress(k) * GAP * f;
+        ox += cuts[k].n[0] * d;
+        oy += cuts[k].n[1] * d;
+      }
+    }
+    const u = (now - blendAt) / 320;
+    if (prevOff && u < 1) {
+      const p = prevOff.get(l), e = easeOutCubic(clamp(u));
+      return [p[0] + (ox - p[0]) * e, p[1] + (oy - p[1]) * e];
+    }
+    return [ox, oy];
+  }
+  const showLine = (node, c, s0, s1) => {
+    if (s1 - s0 < 0.02) { set(node, 'visibility', 'hidden'); return; }
+    set(node, 'x1', f3(c.a[0] + c.dir[0] * s0)); set(node, 'y1', f3(c.a[1] + c.dir[1] * s0));
+    set(node, 'x2', f3(c.a[0] + c.dir[0] * s1)); set(node, 'y2', f3(c.a[1] + c.dir[1] * s1));
+    set(node, 'visibility', 'visible');
+  };
+  const pop = x => { const u = clamp(x / 300); return u < .6 ? 1.15 * easeOutCubic(u / .6) : 1.15 - .15 * ((u - .6) / .4); };
+
+  // Readout and controls
+  const readout = document.getElementById('readout');
+  const countEl = document.getElementById('cutCount');
+  const typeEl = document.getElementById('cutType');
+  const textEl = document.getElementById('cutText');
+  const metaEl = document.getElementById('cutMeta');
+  const playLabel = document.getElementById('playLabel');
+  const playIcon = document.getElementById('playIcon');
+  const segs = cuts.map((c, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'seg';
+    b.setAttribute('aria-label', `Cut ${i + 1}: ${c.type.toLowerCase()}`);
+    b.addEventListener('click', () => { setIntent(false); reduce ? staticStep(i) : seek(i); });
+    document.getElementById('segments').appendChild(b);
+    return b;
+  });
+  let shownKey = -1, shownMeta = '';
+
+  function render(now) {
+    for (const l of leaves) {
+      const o = offsetOf(l, now);
+      l.off = o;
+      set(l.g, 'transform', `translate(${f3(o[0])} ${f3(o[1])})`);
+      if (l.sh) set(l.sh, 'transform', `translate(${f3(o[0] + .28)} ${f3(o[1] + .42)})`);
+    }
+
+    const act = mode === 'act';
+    const tb = act ? tB() : 0;
+    const fs = act ? feedState() : null;
+    const feeding = act && !reduce && t >= settle + SPIN && t < tb;
+
+    cuts.forEach((c, k) => {
+      let strip = 1;
+      if (mode === 'hold') strip = 0;
+      else if (mode === 'reset') strip = clamp((t - 550) / 250);
+      else if (k < cur || (k === cur && t >= tb && !reduce)) strip = 0;
+      set(c.leaf.rect, 'opacity', f3(strip));
+
+      if (!act || k !== cur) { set(c.mark, 'visibility', 'hidden'); set(c.groove, 'visibility', 'hidden'); return; }
+      if (reduce) { showLine(c.mark, c, 0, c.L); set(c.groove, 'visibility', 'hidden'); return; }
+      if (t < settle + SPIN) {
+        showLine(c.mark, c, 0, c.L * easeOutCubic(clamp(t / PARK)));
+        set(c.groove, 'visibility', 'hidden');
+      } else if (t < tb) {
+        showLine(c.mark, c, fs.front, c.L);
+        showLine(c.groove, c, 0, fs.front);
+        set(c.groove, 'opacity', 1);
+      } else {
+        set(c.mark, 'visibility', 'hidden');
+        const g = 1 - clamp((t - tb - 60) / 220);
+        if (g > 0) { showLine(c.groove, c, 0, c.L); set(c.groove, 'opacity', f3(g)); }
+        else set(c.groove, 'visibility', 'hidden');
+      }
+    });
+
+    let bo = 0, bs = 1, bx = 0, by = 0, sig = 0;
+    if (act && !reduce) {
+      const c = cuts[cur], o = c.leaf.off;
+      const at = s => [c.a[0] + o[0] + c.dir[0] * s, c.a[1] + o[1] + c.dir[1] * s];
+      if (t < settle + SPIN) {
+        [bx, by] = at(-1);
+        const u = clamp(t / 220);
+        bo = u; bs = .92 + .08 * u;
+        sig = t > settle ? Math.pow((t - settle) / SPIN, 2) : 0;
+      } else if (t < tb) {
+        [bx, by] = at(fs.s);
+        bo = 1; sig = 1;
+      } else if (t < tb + 300) {
+        const u = (t - tb) / 300;
+        [bx, by] = at(c.L + 1.2 * (1 - (1 - u) * (1 - u)));
+        sig = 1 - u;
+        bo = u < 1 / 3 ? 1 : 1 - (u - 1 / 3) * 1.5;
+      }
+    }
+    sigma = sig;
+    set(blade, 'opacity', f3(bo));
+    if (bo > 0) {
+      set(blade, 'transform', `translate(${f3(bx)} ${f3(by)}) scale(${f3(bs)})`);
+      set(rotor, 'transform', `rotate(${f3(angle)})`);
+      set(ring, 'opacity', f3(.55 * sig));
+    }
+
+    for (const p of parts) {
+      let s = 0, op = 1;
+      if (mode === 'hold') s = 1;
+      else if (mode === 'reset') { s = 1; op = 1 - clamp(t / 200); }
+      else if (p.freeAt < cur) s = 1;
+      else if (p.freeAt === cur && !reduce && t >= tb + 200) s = pop(t - tb - 200);
+      if (op <= 0) s = 0;
+      set(p.badge, 'opacity', s > 0 ? f3(op) : 0);
+      if (s > 0) set(p.badge, 'transform', `translate(${p.bx} ${p.by}) scale(${f3(s * p.br / 1.6)})`);
+    }
+
+    const key = act ? cur : mode === 'hold' ? LAST : 0;
+    const kc = cuts[key];
+    if (key !== shownKey) {
+      shownKey = key;
+      countEl.textContent = `Cut ${key + 1} of ${cuts.length}`;
+      typeEl.textContent = kc.type;
+      textEl.textContent = kc.text;
+    }
+    const meta = feeding ? `${inch(fs.front)}" of ${kc.len} · kerf 1/8"` : `${kc.len} cut · kerf 1/8"`;
+    if (meta !== shownMeta) { shownMeta = meta; metaEl.textContent = meta; }
+    const p = act && !reduce ? (t < settle + SPIN ? 0 : t < tb ? fs.front / kc.L : 1) : 0;
+    segs.forEach((s, k) => {
+      const done = mode === 'hold' || (act && k < cur);
+      const current = (act && k === cur) || (mode === 'reset' && k === 0);
+      const state = (done ? 'd' : '') + (current ? 'c' : '');
+      if (s._state !== state) {
+        s._state = state;
+        s.classList.toggle('done', done);
+        if (current) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+      }
+      const pv = current ? f3(p) : 0;
+      if (s._p !== pv) { s._p = pv; s.style.setProperty('--p', pv); }
+    });
+  }
+
+  function emit(t0, t1) {
+    if (!ctx) return;
+    const f0 = settle + SPIN, tb = tB();
+    const span = Math.min(t1, tb) - Math.max(t0, f0);
+    if (span <= 0) return;
+    const c = cuts[cur], fs = feedState();
+    emitAcc += 45 * span / 1000 * speedAt(fs.u);
+    const o = c.leaf.off;
+    const x = c.a[0] + o[0] + c.dir[0] * fs.front, y = c.a[1] + o[1] + c.dir[1] * fs.front;
+    while (emitAcc >= 1) { emitAcc -= 1; chip(x, y, c); }
+  }
+  function puff() {
+    if (!ctx) return;
+    const c = cuts[cur], o = c.leaf.off;
+    const x = c.a[0] + o[0] + c.dir[0] * c.L, y = c.a[1] + o[1] + c.dir[1] * c.L;
+    const fwd = Math.atan2(c.dir[1], c.dir[0]);
+    for (let i = 0; i < 12; i++) spawn(x, y, fwd + rnd(-.6, .6), rnd(10, 24), rnd(4, 10), rnd(.7, 1.3));
+  }
+
+  function advance(ms) {
+    let rem = ms * rate, guard = 0;
+    while (rem > 1e-6 && guard++ < 40) {
+      if (mode === 'act') {
+        const tb = tB(), end = tb + TAIL;
+        const stopHere = stopAt && stopAt.cur === cur && t < PARK;
+        const next = stopHere ? PARK : t < tb ? tb : end;
+        const step = Math.min(rem, next - t);
+        emit(t, t + step);
+        t += step;
+        rem -= step;
+        if (t < next) break;
+        if (stopHere) { halt(); return; }
+        if (next === tb) puff();
+        else if (cur < LAST) { cur++; t = 0; settle = 350; }
+        else { mode = 'hold'; t = 0; if (stopAt && stopAt.hold) { halt(); return; } }
+      } else if (mode === 'hold') {
+        const step = Math.min(rem, HOLD - t);
+        t += step; rem -= step;
+        if (t >= HOLD) { mode = 'reset'; t = 0; }
+      } else {
+        const step = Math.min(rem, RESET - t);
+        t += step; rem -= step;
+        if (t >= RESET) { mode = 'act'; cur = 0; t = 0; settle = 600; }
+      }
+    }
+  }
+
+  let rafId = 0, last = 0;
+  function frame(now) {
+    rafId = 0;
+    const dt = last ? Math.min(50, now - last) : 16;
+    last = now;
+    const live = running && visible && !reduce;
+    if (live) advance(dt);
+    angle = (angle + 380 * sigma * dt / 1000) % 360;
+    render(now);
+    if (ctx) { stepDust(dt / 1000); drawDust(); }
+    if (live || alive > 0 || now - blendAt < 340) rafId = requestAnimationFrame(frame);
+    else last = 0;
+  }
+  const kick = () => { if (!rafId) rafId = requestAnimationFrame(frame); };
+
+  function halt() { running = false; rate = 1; stopAt = null; }
+  function setIntent(on) {
+    intent = on;
+    playLabel.textContent = on ? 'Pause' : 'Play';
+    playIcon.innerHTML = on ? '<path d="M3 2h4v12H3zM9 2h4v12H9z"/>' : '<path d="M4 2l10 6-10 6z"/>';
+    readout.setAttribute('aria-live', on ? 'off' : 'polite');
+    if (!on) clearInterval(staticTimer);
+  }
+  function seek(k) {
+    prevOff = new Map(leaves.map(l => [l, l.off || [0, 0]]));
+    blendAt = performance.now();
+    if (ctx) clearDust();
+    mode = 'act'; cur = (k + cuts.length) % cuts.length; t = PARK; settle = 700;
+    halt();
+    kick();
+  }
+
+  // Reduced motion: no blade, dust or sliding; Play steps through the cuts every 2.4 seconds.
+  let staticTimer = 0;
+  function staticStep(k) {
+    mode = 'act'; cur = (k + cuts.length) % cuts.length; t = PARK; settle = 700;
+    render(performance.now());
+  }
+
+  document.getElementById('playBtn').addEventListener('click', () => {
+    if (intent) {
+      setIntent(false);
+      if (reduce) return;
+      if (mode === 'act' && t >= PARK && t <= settle) halt();
+      else if (mode === 'act' && t < PARK) stopAt = { cur };
+      else if (mode === 'act') stopAt = cur < LAST ? { cur: cur + 1 } : { hold: true };
+      else if (mode === 'hold') halt();
+      else stopAt = { cur: 0 };
+    } else {
+      setIntent(true);
+      if (reduce) { staticTimer = setInterval(() => staticStep(cur + 1), 2400); return; }
+      stopAt = null; rate = 1; running = true;
+      kick();
+    }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    setIntent(false);
+    if (reduce) { staticStep(cur + 1); return; }
+    if (mode === 'act' && t <= settle) {
+      stopAt = cur < LAST ? { cur: cur + 1 } : { hold: true };
+      rate = 1.4; running = true;
+      kick();
+    } else seek(mode === 'act' ? cur + 1 : 0);
+  });
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    setIntent(false);
+    if (reduce) { staticStep(cur - 1); return; }
+    if (mode !== 'act') seek(LAST);
+    else seek(t <= settle ? cur - 1 : cur);
+  });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      visible = entries[0].intersectionRatio >= .35;
+      if (visible) kick();
+    }, { threshold: [0, .35, .6] }).observe(svg);
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', readColors);
+  new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  reduceMQ.addEventListener?.('change', e => {
+    reduce = e.matches;
+    svg.classList.toggle('static', reduce);
+    setIntent(false);
+    if (ctx) clearDust();
+    if (canvas) canvas.hidden = reduce;
+    setupCanvas();
+    if (reduce) { halt(); staticStep(cur); } else seek(cur);
+  });
+
+  svg.classList.toggle('static', reduce);
+  setupCanvas();
+  setIntent(intent);
+  render(performance.now());
+  if (intent) { running = true; kick(); }
+
+  // Shop section: the four kerfs open one at a time and the figure counts up to 1/2".
+  const strip = document.querySelector('.kerf-strip');
+  const fig = document.querySelector('.kerf-figure');
+  if (strip && fig && !reduce && 'IntersectionObserver' in window) {
+    const kerfs = [...strip.querySelectorAll('.k-cut')];
+    const steps = ['0″', '⅛″', '¼″', '⅜″', '½″'];
+    const io = new IntersectionObserver(entries => {
+      if (entries[0].intersectionRatio < .6) return;
+      io.disconnect();
+      kerfs.forEach(k => k.classList.add('k-uncut'));
+      fig.textContent = steps[0];
+      kerfs.forEach((k, i) => setTimeout(() => {
+        k.classList.remove('k-uncut');
+        fig.textContent = steps[i + 1];
+        fig.animate?.([{ transform: 'translateY(-6px)' }, { transform: 'none' }], { duration: 220, easing: 'ease-out' });
+      }, 400 + i * 420));
+    }, { threshold: [.6] });
+    io.observe(strip);
+  }
+})();
+</script>
+</body>
+</html>
